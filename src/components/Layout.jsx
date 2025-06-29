@@ -40,7 +40,7 @@ const Layout = ({ children }) => {
                 <Heart className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h1 className="text-lg font-bold gradient-text">MediPOS</h1>
+                <h1 className="text-lg font-bold gradient-text">Koromack Sombel Diop</h1>
                 <p className="text-xs text-muted-foreground">Centre de Santé</p>
               </div>
             </div>

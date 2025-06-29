@@ -9,7 +9,7 @@ const ReceiptDialog = ({ isOpen, onOpenChange, lastSale }) => {
 
   const printReceipt = () => {
     // Crée une nouvelle fenêtre pour l'impression
-    const printWindow = window.open('', '', 'width=350,height=600');
+    const printWindow = window.open('', '', 'width=500,height=600');
     if (!printWindow) {
       toast({ title: "Impossible d'ouvrir la fenêtre d'impression" });
       return;
@@ -20,7 +20,7 @@ const ReceiptDialog = ({ isOpen, onOpenChange, lastSale }) => {
         <head>
           <title>Reçu de Vente</title>
           <style>
-            body { font-family: monospace; margin: 0; padding: 20px; }
+            body { font-family: monospace; margin: 0; padding: 5px; }
             .center { text-align: center; }
             .bold { font-weight: bold; }
             .items { margin: 16px 0; }
