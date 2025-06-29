@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
@@ -20,7 +19,7 @@ import { useToast } from '@/components/ui/use-toast';
 const Settings = () => {
   const [settings, setSettings] = useState({
     // Informations du centre
-    centerName: 'Centre de Santé MediPOS',
+    centerName: 'Centre de Santé Koromack Sombel Diop',
     address: '123 Rue de la Santé, 75001 Paris',
     phone: '01 23 45 67 89',
     email: 'contact@centre-sante.fr',
@@ -28,7 +27,7 @@ const Settings = () => {
     // Paramètres d'impression
     printerName: 'EPSON TM-T20III',
     printerPort: 'USB001',
-    receiptHeader: 'Centre de Santé MediPOS',
+    receiptHeader: 'Centre de Santé Koromack Sombel Diop',
     receiptFooter: 'Merci de votre visite!',
     
     // Notifications
@@ -53,9 +52,63 @@ const Settings = () => {
   };
 
   const testPrinter = () => {
-    toast({
-      title: "🚧 Cette fonctionnalité n'est pas encore implémentée—mais ne vous inquiétez pas ! Vous pouvez la demander dans votre prochaine demande ! 🚀"
-    });
+    // Génère un faux reçu de test
+    const testReceiptHtml = `
+      <html>
+        <head>
+          <title>Test Impression</title>
+          <style>
+            body { font-family: monospace; margin: 0; padding: 20px; }
+            .center { text-align: center; }
+            .bold { font-weight: bold; }
+            .items { margin: 16px 0; }
+            .item-row { display: flex; justify-content: space-between; font-size: 14px; }
+            .total { border-top: 1px dashed #000; margin-top: 12px; padding-top: 8px; font-size: 16px; font-weight: bold; display: flex; justify-content: space-between; }
+            .footer { margin-top: 24px; font-size: 12px; text-align: center; }
+          </style>
+        </head>
+        <body>
+          <div class="center bold">Koromack Sombel Diop</div>
+          <div class="center">REÇU DE TEST</div>
+          <div class="center">${new Date().toLocaleString('fr-FR')}</div>
+          <hr />
+          <div><span class='bold'>Patient:</span> John Doe</div>
+          <div class="items">
+            <div class="item-row">
+              <span>Paracétamol 500mg x2</span>
+              <span>7 000 XOF</span>
+            </div>
+            <div class="item-row">
+              <span>Consultation Générale x1</span>
+              <span>10 000 XOF</span>
+            </div>
+            <div class="item-row">
+              <span>Pansements x3</span>
+              <span>6 900 XOF</span>
+            </div>
+          </div>
+          <div class="total">
+            <span>Total:</span>
+            <span>23 900 XOF</span>
+          </div>
+          <div class="footer">
+            Ceci est un test d'impression.<br />Merci de vérifier la qualité du reçu !
+          </div>
+        </body>
+      </html>
+    `;
+    const printWindow = window.open('', '', 'width=450,height=600');
+    if (!printWindow) {
+      toast({ title: "Impossible d'ouvrir la fenêtre d'impression" });
+      return;
+    }
+    printWindow.document.write(testReceiptHtml);
+    printWindow.document.close();
+    printWindow.focus();
+    setTimeout(() => {
+      printWindow.print();
+      printWindow.close();
+    }, 300);
   };
 
   const exportData = () => {
@@ -70,7 +123,7 @@ const Settings = () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `medipos-backup-${new Date().toISOString().split('T')[0]}.json`;
+    a.download = `koromack-sombel-diop-backup-${new Date().toISOString().split('T')[0]}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
