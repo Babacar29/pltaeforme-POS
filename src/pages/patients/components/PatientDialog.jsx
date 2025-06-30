@@ -15,12 +15,12 @@ const PatientDialog = ({ isOpen, onOpenChange, patient, onSave }) => {
   useEffect(() => {
     if (isEditing) {
       setFormData({
-        firstName: patient.firstName || '',
-        lastName: patient.lastName || '',
+        firstName: patient.first_name || '',
+        lastName: patient.last_name || '',
         phone: patient.phone || '',
         email: patient.email || '',
         address: patient.address || '',
-        birthDate: patient.birthDate || '',
+        birthDate: patient.birth_date || '',
         notes: patient.notes || ''
       });
     } else {

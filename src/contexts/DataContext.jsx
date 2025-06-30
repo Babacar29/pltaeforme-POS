@@ -240,17 +240,26 @@ export const DataProvider = ({ children }) => {
 
   const addPatient = async (patient) => {
     try {
+      // Conversion du champ created_at si fourni dans patient
+      let createdAt = undefined;
+      if (patient.created_at) {
+        createdAt = patient.created_at.replaceAll('/', '-');
+      }
+      const insertData = {
+        first_name: patient.firstName,
+        last_name: patient.lastName,
+        phone: patient.phone,
+        email: patient.email,
+        address: patient.address,
+        birth_date: patient.birthDate,
+        notes: patient.notes
+      };
+      if (createdAt) {
+        insertData.created_at = createdAt;
+      }
       const { data, error } = await supabase
         .from('patients')
-        .insert([{
-          first_name: patient.firstName,
-          last_name: patient.lastName,
-          phone: patient.phone,
-          email: patient.email,
-          address: patient.address,
-          birth_date: patient.birthDate,
-          notes: patient.notes
-        }])
+        .insert([insertData])
         .select()
         .single();
 
@@ -282,6 +291,11 @@ export const DataProvider = ({ children }) => {
 
   const updatePatient = async (id, updates) => {
     try {
+      // Conversion du champ updated_at si fourni dans updates
+      let updatedAt = new Date().toISOString();
+      if (updates.updated_at) {
+        updatedAt = updates.updated_at.replaceAll('/', '-');
+      }
       const { data, error } = await supabase
         .from('patients')
         .update({
@@ -292,7 +306,7 @@ export const DataProvider = ({ children }) => {
           address: updates.address,
           birth_date: updates.birthDate,
           notes: updates.notes,
-          updated_at: new Date().toISOString()
+          updated_at: updatedAt
         })
         .eq('id', id)
         .select()

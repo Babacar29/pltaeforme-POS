@@ -11,6 +11,7 @@ const POS = () => {
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [showReceipt, setShowReceipt] = useState(false);
   const [lastSale, setLastSale] = useState(null);
+  const [loadingReceipt, setLoadingReceipt] = useState(false); // Ajout du loader
   const { toast } = useToast();
 
   const addToCart = (item) => {
@@ -50,7 +51,9 @@ const POS = () => {
 
   // Remplace la fonction getCartTotal par un useMemo pour garantir la réactivité
   const cartTotal = useMemo(() => {
-    return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    const total = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    console.log('[POS] Calcul du total', { cart, total });
+    return total;
   }, [cart]);
 
   const processSale = async () => {
@@ -62,7 +65,16 @@ const POS = () => {
       });
       return;
     }
+    if (!selectedPatient) {
+      toast({
+        title: "Patient obligatoire",
+        description: "Veuillez sélectionner un patient avant de finaliser la vente.",
+        variant: "destructive"
+      });
+      return;
+    }
     try {
+      setLoadingReceipt(true); // Démarre le loader
       const sale = {
         patient: selectedPatient,
         items: cart,
@@ -85,11 +97,21 @@ const POS = () => {
         description: "Impossible d'enregistrer la vente. Détail: " + (e?.message || e),
         variant: "destructive"
       });
+    } finally {
+      setLoadingReceipt(false); // Arrête le loader
     }
   };
 
   return (
-    <div className="grid gap-6 lg:grid-cols-3">
+    <div className="grid gap-6 lg:grid-cols-3 relative">
+      {loadingReceipt && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/70">
+          <div className="flex flex-col items-center gap-4">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            <span className="text-lg font-semibold text-blue-700">Préparation du reçu...</span>
+          </div>
+        </div>
+      )}
       <InventoryBrowser inventory={inventory} onAddToCart={addToCart} />
       <CartPanel
         cart={cart}

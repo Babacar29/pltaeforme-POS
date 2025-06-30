@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { Users, Plus } from 'lucide-react';
+import { Users, Plus, Eye, Edit, Trash2 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import PatientCard from './PatientCard';
 import PatientDialog from './PatientDialog';
+import PatientViewDialog from './PatientViewDialog';
 
 const PatientList = ({ patients, searchTerm, onUpdatePatient, onDeletePatient, onAddPatient }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState(null);
+  const [viewDialogOpen, setViewDialogOpen] = useState(false);
+  const [patientToView, setPatientToView] = useState(null);
 
   const handleEdit = (patient) => {
     setSelectedPatient(patient);
@@ -21,6 +24,11 @@ const PatientList = ({ patients, searchTerm, onUpdatePatient, onDeletePatient, o
       onAddPatient(formData);
     }
     setSelectedPatient(null);
+  };
+
+  const handleView = (patient) => {
+    setPatientToView(patient);
+    setViewDialogOpen(true);
   };
 
   if (patients.length === 0) {
@@ -54,15 +62,27 @@ const PatientList = ({ patients, searchTerm, onUpdatePatient, onDeletePatient, o
 
   return (
     <>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="divide-y divide-gray-200 bg-white rounded-lg shadow overflow-hidden">
         {patients.map((patient, index) => (
-          <PatientCard
-            key={patient.id}
-            patient={patient}
-            index={index}
-            onEdit={handleEdit}
-            onDelete={onDeletePatient}
-          />
+          <div key={patient.id} className="flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition">
+            <div className="flex-1 min-w-0">
+              <div className="font-medium text-base text-gray-900">
+                {patient.first_name} {patient.last_name}
+              </div>
+              <div className="text-xs text-muted-foreground">{patient.phone}</div>
+            </div>
+            <div className="flex gap-2">
+              <Button size="sm" variant="outline" onClick={() => handleView(patient)}>
+                <Eye className="h-4 w-4" />
+              </Button>
+              <Button size="sm" variant="outline" onClick={() => handleEdit(patient)}>
+                <Edit className="h-4 w-4" />
+              </Button>
+              <Button size="sm" variant="destructive" onClick={() => onDeletePatient(patient.id)}>
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
         ))}
       </div>
       <PatientDialog
@@ -70,6 +90,11 @@ const PatientList = ({ patients, searchTerm, onUpdatePatient, onDeletePatient, o
         onOpenChange={setIsDialogOpen}
         patient={selectedPatient}
         onSave={handleSave}
+      />
+      <PatientViewDialog
+        isOpen={viewDialogOpen}
+        onOpenChange={setViewDialogOpen}
+        patient={patientToView}
       />
     </>
   );
