@@ -28,7 +28,7 @@ const PatientCard = ({ patient, index, onEdit, onDelete }) => (
         <div className="flex justify-between items-start">
           <div>
             <CardTitle className="text-lg">
-              {patient.firstName} {patient.lastName}
+              {patient.first_name} {patient.last_name}
             </CardTitle>
             {patient.birthDate && (
               <CardDescription>

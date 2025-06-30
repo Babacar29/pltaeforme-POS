@@ -17,15 +17,18 @@ import { useAuth } from '@/contexts/SupabaseAuthContext';
 const Layout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
-  const { signOut } = useAuth();
+  const { signOut, role, user } = useAuth();
 
   const navigation = [
     { name: 'Tableau de Bord', href: '/', icon: LayoutDashboard },
     { name: 'Point de Vente', href: '/pos', icon: ShoppingCart },
     { name: 'Patients', href: '/patients', icon: Users },
     { name: 'Inventaire', href: '/inventory', icon: Package },
-    { name: 'Rapports', href: '/reports', icon: BarChart3 },
-    { name: 'Paramètres', href: '/settings', icon: Settings },
+    // Les liens Rapports et Paramètres sont réservés à l'admin
+    ...(role === 'admin' ? [
+      { name: 'Rapports', href: '/reports', icon: BarChart3 },
+      { name: 'Paramètres', href: '/settings', icon: Settings },
+    ] : [])
   ];
 
   return (
@@ -72,11 +75,13 @@ const Layout = ({ children }) => {
           <div className="p-4 border-t border-white/20">
             <div className="flex items-center space-x-3">
               <div className="h-10 w-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
-                <span className="text-white font-medium">AD</span>
+                <span className="text-white font-medium">
+                  {role && role.length > 1 ? role.slice(0, 2).toUpperCase() : 'US'}
+                </span>
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-900">Administrateur</p>
-                <p className="text-xs text-muted-foreground">admin@centre-sante.com</p>
+                <p className="text-sm font-medium text-gray-900">{role ? role.charAt(0).toUpperCase() + role.slice(1) : 'Utilisateur'}</p>
+                <p className="text-xs text-muted-foreground">{user?.email || ''}</p>
               </div>
             </div>
             <Button

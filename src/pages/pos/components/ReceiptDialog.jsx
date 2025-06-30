@@ -14,29 +14,34 @@ const ReceiptDialog = ({ isOpen, onOpenChange, lastSale }) => {
       toast({ title: "Impossible d'ouvrir la fenêtre d'impression" });
       return;
     }
+
+    const now = new Date();
+    const dateHeureFr = now.toLocaleString('fr-FR');
+
     // Génère le contenu du ticket
     const receiptHtml = `
       <html>
         <head>
           <title>Reçu de Vente</title>
           <style>
-            body { font-family: monospace; margin: 0; padding: 5px; }
+            body { font-family: monospace; margin: 0; padding: 0; }
             .center { text-align: center; }
             .bold { font-weight: bold; }
             .items { margin: 16px 0; }
-            .item-row { display: flex; justify-content: space-between; font-size: 14px; }
-            .total { border-top: 1px dashed #000; margin-top: 12px; padding-top: 8px; font-size: 16px; font-weight: bold; display: flex; justify-content: space-between; }
-            .footer { margin-top: 24px; font-size: 12px; text-align: center; }
+            .item-row { display: flex; justify-content: space-between; font-size: 16px; }
+            .total { border-top: 1px dashed #000; margin-top: 12px; padding-top: 8px; font-size: 18px; font-weight: bold; display: flex; justify-content: space-between; }
+            .footer { margin-top: 24px; font-size: 13px; text-align: center; }
           </style>
         </head>
         <body>
           <div class="center bold">Centre de Santé</div>
+          <div class="center bold">Koromack Sombel Diop de Nianing</div>
           <div class="center">Reçu de Vente</div>
           <div class="center">
-            ${lastSale ? new Date(lastSale.date).toLocaleString('fr-FR') : ''}
+            ${dateHeureFr}
           </div>
           <hr />
-          ${lastSale && lastSale.patient ? `<div><span class='bold'>Patient:</span> ${lastSale.patient.firstName} ${lastSale.patient.lastName}</div>` : ''}
+          ${lastSale && lastSale.patient ? `<div><span class='bold'>Patient:</span> ${lastSale.patient.first_name} ${lastSale.patient.last_name} - ${lastSale.patient.phone || ''} ${lastSale.patient.birth_date ? `(${new Date().getFullYear() - new Date(lastSale.patient.birth_date).getFullYear()} ans)` : ''}</div>` : ''}
           <div class="items">
             ${(lastSale?.items || []).map(item => `
               <div class="item-row">
@@ -90,6 +95,10 @@ const ReceiptDialog = ({ isOpen, onOpenChange, lastSale }) => {
                 <p className="text-sm"><strong>Patient:</strong></p>
                 <p className="text-sm">
                   {lastSale.patient.firstName} {lastSale.patient.lastName}
+                </p>
+                <p className="text-sm">
+                  {lastSale.patient.phone}
+                  {lastSale.patient.birth_date ? ` - ${new Date().getFullYear() - new Date(lastSale.patient.birth_date).getFullYear()} ans` : ''}
                 </p>
               </div>
             )}

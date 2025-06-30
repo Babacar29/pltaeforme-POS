@@ -24,7 +24,11 @@ const PatientSelection = ({ selectedPatient, onSelectPatient }) => {
           }}
         >
           <SelectTrigger className="text-black">
-            <SelectValue placeholder="Sélectionner un patient" />
+            <SelectValue placeholder="Sélectionner un patient">
+              {selectedPatient
+                ? `${selectedPatient.first_name} ${selectedPatient.last_name}`
+                : null}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             {patients.map((patient) => (
@@ -33,7 +37,7 @@ const PatientSelection = ({ selectedPatient, onSelectPatient }) => {
                 value={patient.id.toString()}
                 className="text-black"
               >
-                {patient.firstName} {patient.lastName}
+                {patient.first_name} {patient.last_name}
               </SelectItem>
             ))}
           </SelectContent>
@@ -42,7 +46,7 @@ const PatientSelection = ({ selectedPatient, onSelectPatient }) => {
         {selectedPatient && (
           <div className="mt-3 p-3 bg-green-50 rounded-lg">
             <p className="text-sm font-medium">
-              {selectedPatient.firstName} {selectedPatient.lastName}
+              {selectedPatient.first_name} {selectedPatient.last_name}
             </p>
             <p className="text-xs text-muted-foreground">
               {selectedPatient.phone}
