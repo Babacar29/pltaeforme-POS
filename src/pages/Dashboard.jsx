@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useData } from '@/contexts/DataContext';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -23,6 +24,8 @@ const Dashboard = () => {
     todayAppointments: 0,
     lowStock: 0
   });
+  // Préparer les données pour le graphique des ventes (7 derniers jours)
+  const [salesChartData, setSalesChartData] = useState([]);
 
   useEffect(() => {
     if (loading) return;
@@ -38,6 +41,24 @@ const Dashboard = () => {
       todayAppointments: Math.floor(Math.random() * 15) + 5, // Simulation
       lowStock: lowStockItems
     });
+    // Préparation des données pour le graphique
+    const now = new Date();
+    const days = Array.from({ length: 7 }, (_, i) => {
+      const d = new Date(now);
+      d.setDate(now.getDate() - (6 - i));
+      return d;
+    });
+    const chartData = days.map(day => {
+      const dayStr = day.toLocaleDateString('fr-FR', { weekday: 'short', day: '2-digit', month: '2-digit' });
+      const total = sales
+        .filter(sale => {
+          const saleDate = new Date(sale.date);
+          return saleDate.toDateString() === day.toDateString();
+        })
+        .reduce((sum, sale) => sum + (sale.total || 0), 0);
+      return { date: dayStr, total };
+    });
+    setSalesChartData(chartData);
   }, [sales, patients, inventory, loading]);
 
   const statCards = [
@@ -58,14 +79,6 @@ const Dashboard = () => {
       change: "+3.2%"
     },
     {
-      title: "RDV Aujourd'hui",
-      value: stats.todayAppointments.toString(),
-      description: "Rendez-vous programmés",
-      icon: Calendar,
-      color: "from-purple-500 to-violet-600",
-      change: "+8.1%"
-    },
-    {
       title: "Stock Faible",
       value: stats.lowStock.toString(),
       description: "Articles en rupture",
@@ -75,17 +88,39 @@ const Dashboard = () => {
     }
   ];
 
-  const recentActivities = [
-    { id: 1, type: 'sale', description: 'Vente - Consultation générale', amount: '45.00 XOF', time: '10:30' },
-    { id: 2, type: 'patient', description: 'Nouveau patient - Marie Dubois', amount: '', time: '10:15' },
-    { id: 3, type: 'inventory', description: 'Stock mis à jour - Paracétamol', amount: '', time: '09:45' },
-    { id: 4, type: 'sale', description: 'Vente - Médicaments', amount: '28.50 XOF', time: '09:30' },
-  ];
+  // Générer les 5 dernières activités (ventes et patients)
+  const recentActivities = React.useMemo(() => {
+    if (loading) return [];
+    // Ventes récentes
+    const salesActivities = sales.slice(0, 5).map(sale => ({
+      id: `sale-${sale.id}`,
+      type: 'sale',
+      description: sale.patient
+        ? `Vente à ${sale.patient.firstName} ${sale.patient.lastName}`
+        : 'Vente (patient inconnu)',
+      amount: `${(sale.total || 0).toFixed(2)} XOF`,
+      time: new Date(sale.date).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+    }));
+    // Patients récents
+    const patientActivities = patients.slice(-3).reverse().map(patient => ({
+      id: `patient-${patient.id}`,
+      type: 'patient',
+      description: `Nouveau patient - ${patient.first_name} ${patient.last_name}`,
+      amount: '',
+      time: patient.created_at
+        ? new Date(patient.created_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+        : ''
+    }));
+    // Fusionner, trier, et ne garder que les 5 plus récentes
+    return [...salesActivities, ...patientActivities]
+      .sort((a, b) => b.time.localeCompare(a.time))
+      .slice(0, 5);
+  }, [sales, patients, loading]);
 
   return (
     <div className="space-y-8">
       {/* Stats Cards */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 grid-cols-1 lg:grid-cols-3">
         {statCards.map((stat, index) => (
           <motion.div
             key={stat.title}
@@ -93,7 +128,7 @@ const Dashboard = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
           >
-            <Card className="glass-effect card-hover">
+            <Card className="glass-effect card-hover w-full">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   {stat.title}
@@ -120,7 +155,7 @@ const Dashboard = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <Card className="glass-effect">
+          <Card className="glass-effect h-[32rem]">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <TrendingUp className="h-5 w-5 text-blue-600" />
@@ -131,14 +166,16 @@ const Dashboard = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="h-64 flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg">
-                <div className="text-center">
-                  <Activity className="h-12 w-12 text-blue-500 mx-auto mb-4" />
-                  <p className="text-muted-foreground">Graphique des ventes</p>
-                  <p className="text-sm text-muted-foreground mt-2">
-                    Intégration graphique disponible avec Supabase
-                  </p>
-                </div>
+              <div className="h-96 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={salesChartData} margin={{ top: 10, right: 20, left: 0, bottom: 2 }}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="date" tick={{ fontSize: 12 }} />
+                    <YAxis tick={{ fontSize: 12 }} />
+                    <Tooltip formatter={v => `${v.toFixed(2)} XOF`} />
+                    <Line type="monotone" dataKey="total" stroke="#2563eb" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+                  </LineChart>
+                </ResponsiveContainer>
               </div>
             </CardContent>
           </Card>
@@ -150,7 +187,7 @@ const Dashboard = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <Card className="glass-effect">
+          <Card className="glass-effect h-[32rem]">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Activity className="h-5 w-5 text-purple-600" />
