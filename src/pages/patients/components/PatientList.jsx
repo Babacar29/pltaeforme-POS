@@ -31,6 +31,19 @@ const PatientList = ({ patients, searchTerm, onUpdatePatient, onDeletePatient, o
     setViewDialogOpen(true);
   };
 
+  // Fonction utilitaire pour calculer l'âge à partir de la date de naissance
+  const getAge = (birthDate) => {
+    if (!birthDate) return null;
+    const birth = new Date(birthDate);
+    const today = new Date();
+    let age = today.getFullYear() - birth.getFullYear();
+    const m = today.getMonth() - birth.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+      age--;
+    }
+    return age;
+  };
+
   if (patients.length === 0) {
     return (
       <Card className="glass-effect">
@@ -68,6 +81,9 @@ const PatientList = ({ patients, searchTerm, onUpdatePatient, onDeletePatient, o
             <div className="flex-1 min-w-0">
               <div className="font-medium text-base text-gray-900">
                 {patient.first_name} {patient.last_name}
+                {patient.birth_date && (
+                  <span className="ml-2 text-xs text-muted-foreground">({getAge(patient.birth_date)} ans)</span>
+                )}
               </div>
               <div className="text-xs text-muted-foreground">{patient.phone}</div>
             </div>
