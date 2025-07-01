@@ -16,28 +16,17 @@ const PatientSelection = ({ selectedPatient, onSelectPatient }) => {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <Select
-          value={selectedPatient ? selectedPatient.id.toString() : ''}
-          onValueChange={(value) => {
-            const patient = patients.find(p => p.id.toString() === value);
-            onSelectPatient(patient);
-          }}
-        >
-          <SelectTrigger className="text-black">
-            <SelectValue placeholder="Sélectionner un patient">
-              {selectedPatient
-                ? `${selectedPatient.first_name} ${selectedPatient.last_name}`
-                : null}
-            </SelectValue>
+        <Select onValueChange={(value) => {
+          const patient = patients.find(p => p.id.toString() === value);
+          onSelectPatient(patient);
+        }}>
+          <SelectTrigger>
+            <SelectValue placeholder="Sélectionner un patient" />
           </SelectTrigger>
           <SelectContent>
             {patients.map((patient) => (
-              <SelectItem
-                key={patient.id}
-                value={patient.id.toString()}
-                className="text-black"
-              >
-                {patient.first_name} {patient.last_name}
+              <SelectItem key={patient.id} value={patient.id.toString()}>
+                {patient.firstName} {patient.lastName}
               </SelectItem>
             ))}
           </SelectContent>
@@ -46,7 +35,7 @@ const PatientSelection = ({ selectedPatient, onSelectPatient }) => {
         {selectedPatient && (
           <div className="mt-3 p-3 bg-green-50 rounded-lg">
             <p className="text-sm font-medium">
-              {selectedPatient.first_name} {selectedPatient.last_name}
+              {selectedPatient.firstName} {selectedPatient.lastName}
             </p>
             <p className="text-xs text-muted-foreground">
               {selectedPatient.phone}

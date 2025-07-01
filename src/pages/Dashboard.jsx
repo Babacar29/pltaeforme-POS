@@ -79,6 +79,14 @@ const Dashboard = () => {
       change: "+3.2%"
     },
     {
+      title: "RDV Aujourd'hui",
+      value: stats.todayAppointments.toString(),
+      description: "Rendez-vous programmés",
+      icon: Calendar,
+      color: "from-purple-500 to-violet-600",
+      change: "+8.1%"
+    },
+    {
       title: "Stock Faible",
       value: stats.lowStock.toString(),
       description: "Articles en rupture",
@@ -88,7 +96,7 @@ const Dashboard = () => {
     }
   ];
 
-  // Générer les 5 dernières activités (ventes et patients)
+  // Générer les activités récentes à partir des ventes, patients et inventaire
   const recentActivities = React.useMemo(() => {
     if (loading) return [];
     // Ventes récentes
@@ -105,7 +113,7 @@ const Dashboard = () => {
     const patientActivities = patients.slice(-3).reverse().map(patient => ({
       id: `patient-${patient.id}`,
       type: 'patient',
-      description: `Nouveau patient - ${patient.first_name} ${patient.last_name}`,
+      description: `Nouveau patient - ${patient.firstName} ${patient.lastName}`,
       amount: '',
       time: patient.created_at
         ? new Date(patient.created_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
@@ -120,7 +128,7 @@ const Dashboard = () => {
   return (
     <div className="space-y-8">
       {/* Stats Cards */}
-      <div className="grid gap-6 grid-cols-1 lg:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         {statCards.map((stat, index) => (
           <motion.div
             key={stat.title}
@@ -128,7 +136,7 @@ const Dashboard = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
           >
-            <Card className="glass-effect card-hover w-full">
+            <Card className="glass-effect card-hover">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   {stat.title}
@@ -155,7 +163,7 @@ const Dashboard = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <Card className="glass-effect h-[32rem]">
+          <Card className="glass-effect h-[30rem]">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <TrendingUp className="h-5 w-5 text-blue-600" />
@@ -168,7 +176,7 @@ const Dashboard = () => {
             <CardContent>
               <div className="h-96 w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={salesChartData} margin={{ top: 10, right: 20, left: 0, bottom: 2 }}>
+                  <LineChart data={salesChartData} margin={{ top: 10, right: 20, left: 0, bottom: 20 }}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="date" tick={{ fontSize: 12 }} />
                     <YAxis tick={{ fontSize: 12 }} />
@@ -187,7 +195,7 @@ const Dashboard = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <Card className="glass-effect h-[32rem]">
+          <Card className="glass-effect h-[30rem]">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Activity className="h-5 w-5 text-purple-600" />
