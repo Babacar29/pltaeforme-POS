@@ -36,7 +36,7 @@ export const DataProvider = ({ children }) => {
       const { data, error } = await supabase
         .from('patients')
         .select('*')
-        .order('first_name');
+        .order('firstName');
       
       if (error) throw error;
       setPatientsState(data || []);
@@ -57,8 +57,8 @@ export const DataProvider = ({ children }) => {
           *,
           patients (
             id,
-            first_name,
-            last_name,
+            firstName,
+            lastName,
             phone
           ),
           sale_items (
@@ -79,8 +79,8 @@ export const DataProvider = ({ children }) => {
         paymentMethod: sale.payment_method,
         patient: sale.patients ? {
           id: sale.patients.id,
-          firstName: sale.patients.first_name,
-          lastName: sale.patients.last_name,
+          firstName: sale.patients.firstName,
+          lastName: sale.patients.lastName,
           phone: sale.patients.phone
         } : null,
         items: sale.sale_items?.map(item => ({
@@ -240,26 +240,17 @@ export const DataProvider = ({ children }) => {
 
   const addPatient = async (patient) => {
     try {
-      // Conversion du champ created_at si fourni dans patient
-      let createdAt = undefined;
-      if (patient.created_at) {
-        createdAt = patient.created_at.replaceAll('/', '-');
-      }
-      const insertData = {
-        first_name: patient.firstName,
-        last_name: patient.lastName,
-        phone: patient.phone,
-        email: patient.email,
-        address: patient.address,
-        birth_date: patient.birthDate,
-        notes: patient.notes
-      };
-      if (createdAt) {
-        insertData.created_at = createdAt;
-      }
       const { data, error } = await supabase
         .from('patients')
-        .insert([insertData])
+        .insert([{
+          firstName: patient.firstName,
+          lastName: patient.lastName,
+          phone: patient.phone,
+          email: patient.email,
+          address: patient.address,
+          birthDate: patient.birthDate,
+          notes: patient.notes
+        }])
         .select()
         .single();
 
@@ -267,14 +258,14 @@ export const DataProvider = ({ children }) => {
       
       const formattedPatient = {
         id: data.id,
-        firstName: data.first_name,
-        lastName: data.last_name,
+        firstName: data.firstName,
+        lastName: data.lastName,
         phone: data.phone,
         email: data.email,
         address: data.address,
-        birthDate: data.birth_date,
+        birthDate: data.birthDate,
         notes: data.notes,
-        createdAt: data.created_at
+        createdAt: data.createdAt
       };
       
       setPatientsState(prev => [...prev, formattedPatient]);
@@ -291,22 +282,17 @@ export const DataProvider = ({ children }) => {
 
   const updatePatient = async (id, updates) => {
     try {
-      // Conversion du champ updated_at si fourni dans updates
-      let updatedAt = new Date().toISOString();
-      if (updates.updated_at) {
-        updatedAt = updates.updated_at.replaceAll('/', '-');
-      }
       const { data, error } = await supabase
         .from('patients')
         .update({
-          first_name: updates.firstName,
-          last_name: updates.lastName,
+          firstName: updates.firstName,
+          lastName: updates.lastName,
           phone: updates.phone,
           email: updates.email,
           address: updates.address,
-          birth_date: updates.birthDate,
+          birthDate: updates.birthDate,
           notes: updates.notes,
-          updated_at: updatedAt
+          updatedAt: new Date().toISOString()
         })
         .eq('id', id)
         .select()
@@ -316,14 +302,14 @@ export const DataProvider = ({ children }) => {
       
       const formattedPatient = {
         id: data.id,
-        firstName: data.first_name,
-        lastName: data.last_name,
+        firstName: data.firstName,
+        lastName: data.lastName,
         phone: data.phone,
         email: data.email,
         address: data.address,
-        birthDate: data.birth_date,
+        birthDate: data.birthDate,
         notes: data.notes,
-        createdAt: data.created_at
+        createdAt: data.createdAt
       };
       setPatientsState(prev => prev.map(p => p.id === id ? formattedPatient : p));
       return formattedPatient;

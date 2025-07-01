@@ -47,19 +47,11 @@ export const AuthProvider = ({ children }) => {
     return () => subscription.unsubscribe();
   }, [handleSession]);
 
-  const signUp = useCallback(async (email, password, role = 'user') => {
-    const { data, error } = await supabase.auth.signUp({
+  const signUp = useCallback(async (email, password) => {
+    const { error } = await supabase.auth.signUp({
       email,
       password,
     });
-
-    if (!error && data?.user) {
-      // Créer automatiquement le profil avec le rôle
-      await supabase.from('profiles').insert({
-        id: data.user.id,
-        role
-      });
-    }
 
     if (error) {
       toast({

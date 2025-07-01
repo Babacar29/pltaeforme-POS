@@ -1,4 +1,16 @@
 import React, { useState } from 'react';
+// Fonction utilitaire pour calculer l'âge à partir de la date de naissance (format YYYY-MM-DD)
+function getAge(birthDate) {
+  if (!birthDate) return '';
+  const today = new Date();
+  const birth = new Date(birthDate);
+  let age = today.getFullYear() - birth.getFullYear();
+  const m = today.getMonth() - birth.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+    age--;
+  }
+  return age;
+}
 import { Users, Plus, Eye, Edit, Trash2 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -17,6 +29,11 @@ const PatientList = ({ patients, searchTerm, onUpdatePatient, onDeletePatient, o
     setIsDialogOpen(true);
   };
 
+  const handleView = (patient) => {
+    setPatientToView(patient);
+    setViewDialogOpen(true);
+  };
+
   const handleSave = (formData) => {
     if (selectedPatient) {
       onUpdatePatient(selectedPatient.id, formData);
@@ -24,24 +41,6 @@ const PatientList = ({ patients, searchTerm, onUpdatePatient, onDeletePatient, o
       onAddPatient(formData);
     }
     setSelectedPatient(null);
-  };
-
-  const handleView = (patient) => {
-    setPatientToView(patient);
-    setViewDialogOpen(true);
-  };
-
-  // Fonction utilitaire pour calculer l'âge à partir de la date de naissance
-  const getAge = (birthDate) => {
-    if (!birthDate) return null;
-    const birth = new Date(birthDate);
-    const today = new Date();
-    let age = today.getFullYear() - birth.getFullYear();
-    const m = today.getMonth() - birth.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
-      age--;
-    }
-    return age;
   };
 
   if (patients.length === 0) {
@@ -75,31 +74,39 @@ const PatientList = ({ patients, searchTerm, onUpdatePatient, onDeletePatient, o
 
   return (
     <>
-      <div className="divide-y divide-gray-200 bg-white rounded-lg shadow overflow-hidden">
-        {patients.map((patient, index) => (
-          <div key={patient.id} className="flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition">
-            <div className="flex-1 min-w-0">
-              <div className="font-medium text-base text-gray-900">
-                {patient.first_name} {patient.last_name}
-                {patient.birth_date && (
-                  <span className="ml-2 text-xs text-muted-foreground">({getAge(patient.birth_date)} ans)</span>
-                )}
-              </div>
-              <div className="text-xs text-muted-foreground">{patient.phone}</div>
-            </div>
-            <div className="flex gap-2">
-              <Button size="sm" variant="outline" onClick={() => handleView(patient)}>
-                <Eye className="h-4 w-4" />
-              </Button>
-              <Button size="sm" variant="outline" onClick={() => handleEdit(patient)}>
-                <Edit className="h-4 w-4" />
-              </Button>
-              <Button size="sm" variant="destructive" onClick={() => onDeletePatient(patient.id)}>
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        ))}
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200 bg-white rounded-lg">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Nom</th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Téléphone</th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Âge</th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
+              <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase pr-6">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100">
+            {patients.map((patient) => (
+              <tr key={patient.id} className="hover:bg-blue-50 transition">
+                <td className="px-4 py-2 font-medium">{patient.firstName} {patient.lastName}</td>
+                <td className="px-4 py-2">{patient.phone}</td>
+                <td className="px-4 py-2">{getAge(patient.birthDate)}</td>
+                <td className="px-4 py-2">{patient.email}</td>
+                <td className="px-4 py-2 flex gap-2 justify-end min-w-[120px]">
+                  <Button size="icon" variant="outline" onClick={() => handleView(patient)} aria-label="Voir le patient">
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                  <Button size="icon" variant="secondary" onClick={() => handleEdit(patient)} aria-label="Modifier le patient">
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                  <Button size="icon" variant="destructive" onClick={() => onDeletePatient(patient.id)} aria-label="Supprimer le patient">
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
       <PatientDialog
         isOpen={isDialogOpen}

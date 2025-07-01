@@ -15,12 +15,12 @@ const PatientDialog = ({ isOpen, onOpenChange, patient, onSave }) => {
   useEffect(() => {
     if (isEditing) {
       setFormData({
-        firstName: patient.first_name || '',
-        lastName: patient.last_name || '',
+        firstName: patient.firstName || '',
+        lastName: patient.lastName || '',
         phone: patient.phone || '',
         email: patient.email || '',
         address: patient.address || '',
-        birthDate: patient.birth_date || '',
+        birthDate: patient.birthDate || '',
         notes: patient.notes || ''
       });
     } else {
@@ -33,10 +33,12 @@ const PatientDialog = ({ isOpen, onOpenChange, patient, onSave }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.firstName || !formData.lastName || !formData.phone) {
+    if (!formData.firstName || !formData.lastName || !formData.phone || (!isEditing && !formData.birthDate)) {
       toast({
         title: "Champs requis",
-        description: "Veuillez remplir au minimum le nom, prénom et téléphone.",
+        description: !formData.birthDate && !isEditing
+          ? "Veuillez remplir tous les champs obligatoires, dont la date de naissance."
+          : "Veuillez remplir au minimum le nom, prénom et téléphone.",
         variant: "destructive"
       });
       return;
@@ -80,8 +82,8 @@ const PatientDialog = ({ isOpen, onOpenChange, patient, onSave }) => {
             <Input value={formData.address} onChange={(e) => setFormData({...formData, address: e.target.value})} placeholder="Adresse complète" />
           </div>
           <div>
-            <label className="text-sm font-medium">Date de naissance</label>
-            <Input type="date" value={formData.birthDate} onChange={(e) => setFormData({...formData, birthDate: e.target.value})} />
+            <label className="text-sm font-medium">Date de naissance *</label>
+            <Input type="date" value={formData.birthDate} onChange={(e) => setFormData({...formData, birthDate: e.target.value})} required={!isEditing} />
           </div>
           <div>
             <label className="text-sm font-medium">Notes médicales</label>

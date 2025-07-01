@@ -19,6 +19,7 @@ const Layout = ({ children }) => {
   const location = useLocation();
   const { signOut, role, user } = useAuth();
 
+  // Correction : s'assurer que le rôle est bien pris depuis le contexte Auth (role peut être null)
   const navigation = [
     { name: 'Tableau de Bord', href: '/', icon: LayoutDashboard },
     { name: 'Point de Vente', href: '/pos', icon: ShoppingCart },
