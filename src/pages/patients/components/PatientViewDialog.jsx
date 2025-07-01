@@ -15,7 +15,7 @@ const PatientViewDialog = ({ isOpen, onOpenChange, patient }) => {
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-3 mt-2">
-          <div className="text-lg font-bold">{patient.first_name} {patient.last_name}</div>
+          <div className="text-lg font-bold">{patient.firstName} {patient.lastName}</div>
           <div className="flex items-center gap-2 text-sm">
             <Phone className="h-4 w-4 text-blue-600" />
             <span>{patient.phone}</span>
@@ -32,10 +32,10 @@ const PatientViewDialog = ({ isOpen, onOpenChange, patient }) => {
               <span>{patient.address}</span>
             </div>
           )}
-          {patient.birth_date && (
+          {patient.birthDate && (
             <div className="flex items-center gap-2 text-sm">
               <Calendar className="h-4 w-4 text-orange-600" />
-              <span>Date de naissance : {patient.birth_date}</span>
+              <span>Date de naissance : {patient.birthDate}</span>
             </div>
           )}
           {patient.notes && (
