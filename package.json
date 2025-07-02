@@ -30,6 +30,7 @@
     "cors": "^2.8.5",
     "escpos": "^3.0.0-alpha.6",
     "express": "^5.1.0",
+    "firebase": "^11.10.0",
     "framer-motion": "^10.16.4",
     "html2canvas": "^1.4.1",
     "jspdf": "^3.0.1",

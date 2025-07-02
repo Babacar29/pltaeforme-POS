@@ -103,7 +103,7 @@ const ReceiptDialog = ({ isOpen, onOpenChange, lastSale }) => {
         </DialogHeader>
         
         {lastSale && (
-          <div className="receipt-paper p-6 rounded-lg">
+          <div className="receipt-paper p-6 rounded-lg max-h-96 overflow-y-auto">
             <div className="text-center mb-6">
               <h2 className="text-xl font-bold">Centre de Santé</h2>
               <p className="text-sm text-muted-foreground">Reçu de Vente</p>

@@ -18,6 +18,8 @@ const getSalesStats = (filteredSales, filteredPatients) => {
   const categoryStats = {};
   filteredSales.forEach(sale => {
     sale.items.forEach(item => {
+      // Exclure les catégories non pertinentes
+      if (item.category === 'Consultations' || item.category === 'Analyses') return;
       if (!categoryStats[item.category]) categoryStats[item.category] = { revenue: 0, quantity: 0 };
       categoryStats[item.category].revenue += item.price * item.quantity;
       categoryStats[item.category].quantity += item.quantity;
