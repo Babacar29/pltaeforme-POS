@@ -16,7 +16,7 @@ const ItemDialog = ({ isOpen, onOpenChange, item, categories, onSave }) => {
     if (isEditing) {
       setFormData({
         name: item.name, category: item.category, price: item.price.toString(),
-        quantity: item.quantity.toString(), minStock: item.minStock.toString(),
+        quantity: item.quantity.toString(), minStock: item.minStock !== undefined && item.minStock !== null ? item.minStock.toString() : '',
         description: item.description || ''
       });
     } else {
