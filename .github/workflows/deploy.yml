@@ -25,6 +25,8 @@ jobs:
         run: npm install
       - name: Clean Build Directory
         run: rm -rf build
+      - name: Check Inventory Directory
+        run: ls -l src/pages/inventory
       - name: Build
         run: npm run build
       - name: Setup Pages
