@@ -107,6 +107,7 @@ const Dashboard = () => {
         ? `Vente à ${sale.patient.firstName} ${sale.patient.lastName}`
         : 'Vente (patient inconnu)',
       amount: `${(sale.total || 0).toFixed(2)} XOF`,
+      timestamp: new Date(sale.date).getTime(),
       time: new Date(sale.date).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
     }));
     // Patients récents
@@ -115,13 +116,14 @@ const Dashboard = () => {
       type: 'patient',
       description: `Nouveau patient - ${patient.firstName} ${patient.lastName}`,
       amount: '',
+      timestamp: patient.created_at ? new Date(patient.created_at).getTime() : 0,
       time: patient.created_at
         ? new Date(patient.created_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
         : ''
     }));
     // Fusionner, trier, et ne garder que les 5 plus récentes
     return [...salesActivities, ...patientActivities]
-      .sort((a, b) => b.time.localeCompare(a.time))
+      .sort((a, b) => b.timestamp - a.timestamp)
       .slice(0, 5);
   }, [sales, patients, loading]);
 
