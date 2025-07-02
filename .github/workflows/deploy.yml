@@ -24,17 +24,20 @@ jobs:
       - name: Install Dependencies
         run: npm install
       - name: Clean Build Directory
-        run: rm -rf build
+        run: rm -rf dist
       - name: Check Inventory Directory
         run: ls -l src/pages/inventory
       - name: Build
         run: npm run build
+        env:
+          VITE_SUPABASE_URL: ${{secrets.SUPABASE_API_URL}}
+          VITE_SUPABASE_ANON_KEY: ${{secrets.SUPABASE_ANON_KEY}}
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './build'
+          path: './dist' # Changé de './build' à './dist'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
