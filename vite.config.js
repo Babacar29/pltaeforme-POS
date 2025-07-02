@@ -196,6 +196,7 @@ export default defineConfig({
 		react(),
 		addTransformIndexHtml
 	],
+	//base: '/pltaeforme-POS/',
 	server: {
 		cors: true,
 		headers: {
@@ -210,7 +211,7 @@ export default defineConfig({
 		},
 	},
 	build: {
-		outDir: 'build',
+		outDir: 'dist',
 		rollupOptions: {
 			external: [
 				'@babel/parser',
