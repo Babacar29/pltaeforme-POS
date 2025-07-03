@@ -11,7 +11,7 @@ const InventoryReport = ({ data }) => {
   const stats = [
     { title: "Total Articles", value: totalItems, icon: Package, color: "text-blue-600", isGradient: true },
     { title: "Stock Faible", value: lowStockItems, icon: TrendingUp, color: "text-orange-600" },
-    { title: "Valeur Stock", value: `${totalValue.toFixed(0)} €`, icon: DollarSign, color: "text-green-600" },
+    { title: "Valeur Stock", value: `${totalValue.toFixed(0)} XOF`, icon: DollarSign, color: "text-green-600" },
     { title: "Catégories", value: Object.keys(categoryDistribution).length, icon: BarChart3, color: "text-purple-600" },
   ];
 
@@ -35,7 +35,7 @@ const InventoryReport = ({ data }) => {
                   <p className="text-sm text-muted-foreground">{stats.count} articles</p>
                 </div>
                 <span className="font-bold text-green-600">
-                  {stats.value.toFixed(2)} €
+                  {stats.value.toFixed(2)} XOF
                 </span>
               </div>
             ))}
