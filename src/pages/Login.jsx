@@ -56,7 +56,7 @@ const Login = () => {
             </div>
             <div>
               <CardTitle className="text-2xl gradient-text">Koromack Sombel Diop</CardTitle>
-              <CardDescription className="text-lg">Centre de Santé</CardDescription>
+              <CardDescription className="text-lg">Poste de Santé</CardDescription>
             </div>
           </CardHeader>
           

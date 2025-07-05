@@ -46,7 +46,7 @@ const Layout = ({ children }) => {
               </div>
               <div>
                 <h1 className="text-lg font-bold gradient-text">Koromack Sombel Diop</h1>
-                <p className="text-xs text-muted-foreground">Centre de Santé</p>
+                <p className="text-xs text-muted-foreground">Poste de Santé</p>
               </div>
             </div>
           </div>
@@ -133,7 +133,7 @@ const Layout = ({ children }) => {
                 {sidebarExpanded && (
                   <div>
                     <h1 className="text-lg font-bold gradient-text">Koromack Sombel Diop</h1>
-                    <p className="text-xs text-muted-foreground">Centre de Santé</p>
+                    <p className="text-xs text-muted-foreground">Poste de Santé</p>
                   </div>
                 )}
               </div>
