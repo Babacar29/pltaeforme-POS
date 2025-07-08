@@ -8,11 +8,15 @@ const SalesReport = ({ data }) => {
 
   const { totalRevenue, totalTransactions, averageTransaction, newPatientsInPeriod, categoryStats, topProducts } = data;
 
+  // Helper pour formatage avec espace entre milliers
+  const formatNumber = n => typeof n === 'number' ? n.toLocaleString('fr-FR') : n;
+  const formatMoney = n => typeof n === 'number' ? n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : n;
+
   const stats = [
-    { title: "Chiffre d'Affaires", value: `${totalRevenue.toFixed(2)} XOF`, icon: DollarSign, color: "text-green-600", isGradient: true },
-    { title: "Transactions", value: totalTransactions, icon: BarChart3, color: "text-blue-600" },
-    { title: "Panier Moyen", value: `${averageTransaction.toFixed(2)} XOF`, icon: TrendingUp, color: "text-purple-600" },
-    { title: "Nouveaux Patients", value: newPatientsInPeriod, icon: Users, color: "text-orange-600" },
+    { title: "Chiffre d'Affaires", value: `${formatMoney(totalRevenue)} XOF`, icon: DollarSign, color: "text-green-600", isGradient: true },
+    { title: "Transactions", value: formatNumber(totalTransactions), icon: BarChart3, color: "text-blue-600" },
+    { title: "Panier Moyen", value: `${formatMoney(averageTransaction)} XOF`, icon: TrendingUp, color: "text-purple-600" },
+    { title: "Nouveaux Patients", value: formatNumber(newPatientsInPeriod), icon: Users, color: "text-orange-600" },
   ];
 
   return (
@@ -33,9 +37,9 @@ const SalesReport = ({ data }) => {
                 <div key={category} className="flex items-center justify-between p-3 bg-white/50 rounded-lg">
                   <div>
                     <p className="font-medium">{category}</p>
-                    <p className="text-sm text-muted-foreground">{stats.quantity} articles vendus</p>
+                    <p className="text-sm text-muted-foreground">{formatNumber(stats.quantity)} articles vendus</p>
                   </div>
-                  <span className="font-bold text-green-600">{stats.revenue.toFixed(2)} XOF</span>
+                  <span className="font-bold text-green-600">{formatMoney(stats.revenue)} XOF</span>
                 </div>
               ))}
             </div>
@@ -56,10 +60,10 @@ const SalesReport = ({ data }) => {
                     </span>
                     <div>
                       <p className="font-medium">{product}</p>
-                      <p className="text-sm text-muted-foreground">{stats.quantity} vendus</p>
+                      <p className="text-sm text-muted-foreground">{formatNumber(stats.quantity)} vendus</p>
                     </div>
                   </div>
-                  <span className="font-bold text-green-600">{stats.revenue.toFixed(2)} XOF</span>
+                  <span className="font-bold text-green-600">{formatMoney(stats.revenue)} XOF</span>
                 </div>
               ))}
             </div>

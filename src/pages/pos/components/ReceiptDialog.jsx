@@ -52,7 +52,7 @@ const ReceiptDialog = ({ isOpen, onOpenChange, lastSale }) => {
           </style>
         </head>
         <body>
-          <div class="center bold">Centre de Santé</div>
+          <div class="center bold">Poste de Santé</div>
           <div class="center bold">Koromack Sombel Diop de Nianing</div>
           <div class="center">Reçu de Vente</div>
           <div class="center">

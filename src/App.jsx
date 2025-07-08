@@ -18,7 +18,7 @@ function App() {
   return (
     <>
       <Helmet>
-        <title>POS Centre de Santé - Système de Point de Vente Médical</title>
+        <title>POS Poste de Santé - Système de Point de Vente Médical</title>
         <meta name="description" content="Système POS complet pour centre de santé avec gestion des patients, facturation, inventaire et rapports de ventes." />
       </Helmet>
       

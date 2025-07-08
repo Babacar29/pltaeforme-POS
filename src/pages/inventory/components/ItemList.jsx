@@ -25,6 +25,10 @@ const ItemList = ({ items, searchTerm, categoryFilter, onUpdateItem, onDeleteIte
     setSelectedItem(null);
   };
 
+  // Helpers pour formatage
+  const formatNumber = n => typeof n === 'number' ? n.toLocaleString('fr-FR') : n;
+  const formatMoney = n => typeof n === 'number' ? n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : n;
+
   if (items.length === 0) {
     return (
       <Card className="glass-effect">

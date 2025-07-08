@@ -20,7 +20,7 @@ import { useToast } from '@/components/ui/use-toast';
 const Settings = () => {
   const [settings, setSettings] = useState({
     // Informations du centre
-    centerName: 'Centre de Santé MediPOS',
+    centerName: 'Poste de Santé MediPOS',
     address: '123 Rue de la Santé, 75001 Paris',
     phone: '01 23 45 67 89',
     email: 'contact@centre-sante.fr',
@@ -28,7 +28,7 @@ const Settings = () => {
     // Paramètres d'impression
     printerName: 'EPSON TM-T20III',
     printerPort: 'USB001',
-    receiptHeader: 'Centre de Santé MediPOS',
+    receiptHeader: 'Poste de Santé MediPOS',
     receiptFooter: 'Merci de votre visite!',
     
     // Notifications
@@ -112,7 +112,7 @@ const Settings = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Building className="h-5 w-5 text-blue-600" />
-              Informations du Centre
+              Informations du Poste
             </CardTitle>
             <CardDescription>
               Informations générales de votre centre de santé
