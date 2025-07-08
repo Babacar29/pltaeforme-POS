@@ -6,6 +6,7 @@ import SalesReport from '@/pages/reports/components/SalesReport';
 import PatientReport from '@/pages/reports/components/PatientReport';
 import InventoryReport from '@/pages/reports/components/InventoryReport';
 import { getReportData } from '@/pages/reports/utils/reportUtils';
+import TransactionsTable from '@/pages/reports/components/TransactionsTable';
 
 const Reports = () => {
   const { sales, patients, inventory } = useData();
@@ -29,6 +30,18 @@ const Reports = () => {
     }
   };
 
+  // Préparer les transactions pour le tableau (uniquement pour le rapport ventes)
+  const transactions = useMemo(() => {
+    if (!sales) return [];
+    return sales.map(sale => ({
+      id: sale.id,
+      date: sale.date,
+      patientName: sale.patient ? `${sale.patient.firstName} ${sale.patient.lastName}` : '',
+      items: sale.items,
+      total: sale.total
+    }));
+  }, [sales]);
+
   return (
     <div className="space-y-6">
       <ReportControls
@@ -45,6 +58,9 @@ const Reports = () => {
       >
         {renderReport()}
       </motion.div>
+      {reportType === 'sales' && (
+        <TransactionsTable transactions={transactions} />
+      )}
     </div>
   );
 };

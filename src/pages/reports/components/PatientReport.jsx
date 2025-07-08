@@ -14,6 +14,10 @@ const PatientReport = ({ data }) => {
     { title: "Patients Actifs", value: topPatients.length, icon: Calendar, color: "text-purple-600" },
   ];
 
+  // Helpers pour formatage
+  const formatNumber = n => typeof n === 'number' ? n.toLocaleString('fr-FR') : n;
+  const formatMoney = n => typeof n === 'number' ? n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : n;
+
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-3">
@@ -35,11 +39,11 @@ const PatientReport = ({ data }) => {
                   </span>
                   <div>
                     <p className="font-medium">{patient}</p>
-                    <p className="text-sm text-muted-foreground">{stats.visits} visite{stats.visits > 1 ? 's' : ''}</p>
+                    <p className="text-sm text-muted-foreground">{formatNumber(stats.visits)} visite{stats.visits > 1 ? 's' : ''}</p>
                   </div>
                 </div>
                 <span className="font-bold text-green-600">
-                  {stats.revenue.toFixed(2)} €
+                  {formatMoney(stats.revenue)} XOF
                 </span>
               </div>
             ))}

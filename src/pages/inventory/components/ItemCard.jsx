@@ -4,6 +4,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Edit, Trash2 } from 'lucide-react';
 
+const formatNumber = (n) => (typeof n === 'number' ? n.toLocaleString('fr-FR') : n);
+const formatMoney = (n) => (typeof n === 'number' ? n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : n);
+
 const getStockStatus = (item) => {
   if (item.category === 'Consultations' || item.category === 'Analyses') {
     return { status: 'available', color: 'text-green-600', bg: 'bg-green-100', text: 'Disponible' };
@@ -41,7 +44,7 @@ const ItemCard = ({ item, index, onEdit, onDelete }) => {
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="flex justify-between items-center">
-            <span className="text-2xl font-bold gradient-text">{item.price.toFixed(2)} XOF</span>
+            <span className="text-2xl font-bold gradient-text">{formatMoney(item.price)} XOF</span>
             <span className={`px-2 py-1 rounded-full text-xs font-medium ${stockStatus.bg} ${stockStatus.color}`}>
               {stockStatus.text}
             </span>
@@ -49,8 +52,8 @@ const ItemCard = ({ item, index, onEdit, onDelete }) => {
           {item.description && <p className="text-sm text-muted-foreground">{item.description}</p>}
           {(item.category !== 'Consultations' && item.category !== 'Analyses') && (
             <div className="flex justify-between text-xs text-muted-foreground">
-              <span>Min: {item.minStock}</span>
-              <span>Valeur: {(item.price * item.quantity).toFixed(2)} XOF</span>
+              <span>Min: {formatNumber(item.minStock)}</span>
+              <span>Valeur: {formatMoney(item.price * item.quantity)} XOF</span>
             </div>
           )}
         </CardContent>

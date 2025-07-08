@@ -8,10 +8,14 @@ const InventoryReport = ({ data }) => {
 
   const { totalItems, lowStockItems, totalValue, categoryDistribution } = data;
 
+  // Helpers pour formatage
+  const formatNumber = n => typeof n === 'number' ? n.toLocaleString('fr-FR') : n;
+  const formatMoney = n => typeof n === 'number' ? n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : n;
+
   const stats = [
     { title: "Total Articles", value: totalItems, icon: Package, color: "text-blue-600", isGradient: true },
     { title: "Stock Faible", value: lowStockItems, icon: TrendingUp, color: "text-orange-600" },
-    { title: "Valeur Stock", value: `${totalValue.toFixed(0)} XOF`, icon: DollarSign, color: "text-green-600" },
+    { title: "Valeur Stock", value: `${formatMoney(totalValue)} XOF`, icon: DollarSign, color: "text-green-600" },
     { title: "Catégories", value: Object.keys(categoryDistribution).length, icon: BarChart3, color: "text-purple-600" },
   ];
 
@@ -32,10 +36,10 @@ const InventoryReport = ({ data }) => {
               <div key={category} className="flex items-center justify-between p-3 bg-white/50 rounded-lg">
                 <div>
                   <p className="font-medium">{category}</p>
-                  <p className="text-sm text-muted-foreground">{stats.count} articles</p>
+                  <p className="text-sm text-muted-foreground">{formatNumber(stats.count)} articles</p>
                 </div>
                 <span className="font-bold text-green-600">
-                  {stats.value.toFixed(2)} XOF
+                  {formatMoney(stats.value)} XOF
                 </span>
               </div>
             ))}
