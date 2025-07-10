@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, CreditCard } from 'lucide-react';
+import { ShoppingCart, CheckCircle2 } from 'lucide-react';
 import CartItem from './CartItem';
 import PatientSelection from './PatientSelection';
 
@@ -74,7 +74,7 @@ const CartPanel = ({
               onClick={() => setConfirmOpen(true)}
               disabled={cart.length === 0}
             >
-              <CreditCard className="mr-2 h-5 w-5" />
+            <CheckCircle2 className="mr-2 h-5 w-5 text-green-600" />
               Finaliser la Vente
             </Button>
           </div>

@@ -26,15 +26,15 @@ const SalesReport = ({ data }) => {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card className="glass-effect">
+        <Card className="glass-effect h-[33rem] flex flex-col">
           <CardHeader>
             <CardTitle>Ventes par Catégorie</CardTitle>
             <CardDescription>Répartition du chiffre d'affaires</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex-1 overflow-y-auto pr-2">
             <div className="space-y-4">
               {Object.entries(categoryStats).map(([category, stats]) => (
-                <div key={category} className="flex items-center justify-between p-3 bg-white/50 rounded-lg">
+                <div key={category} className="flex items-center justify-between p-2 bg-white/50 rounded-lg">
                   <div>
                     <p className="font-medium">{category}</p>
                     <p className="text-sm text-muted-foreground">{formatNumber(stats.quantity)} articles vendus</p>
@@ -45,12 +45,12 @@ const SalesReport = ({ data }) => {
             </div>
           </CardContent>
         </Card>
-        <Card className="glass-effect">
+        <Card className="glass-effect h-[33rem] flex flex-col">
           <CardHeader>
             <CardTitle>Top Produits</CardTitle>
             <CardDescription>Articles les plus vendus</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex-1 overflow-y-auto pr-2">
             <div className="space-y-4">
               {topProducts.map(([product, stats], index) => (
                 <div key={product} className="flex items-center justify-between p-3 bg-white/50 rounded-lg">

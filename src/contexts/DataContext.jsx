@@ -65,7 +65,8 @@ export const DataProvider = ({ children }) => {
             id,
             item_name,
             item_price,
-            quantity
+            quantity,
+            item_category
           )
         `)
         .order('created_at', { ascending: false });
@@ -87,7 +88,8 @@ export const DataProvider = ({ children }) => {
           id: item.id,
           name: item.item_name,
           price: parseFloat(item.item_price),
-          quantity: item.quantity
+          quantity: item.quantity,
+          category: item.item_category
         })) || []
       })) || [];
       
@@ -362,7 +364,8 @@ export const DataProvider = ({ children }) => {
         inventory_id: item.id,
         item_name: item.name,
         item_price: item.price,
-        quantity: item.quantity
+        quantity: item.quantity,
+        item_category: item.category 
       }));
 
       const { error: itemsError } = await supabase

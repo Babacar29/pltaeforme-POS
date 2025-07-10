@@ -45,71 +45,82 @@ const TransactionsTable = ({ transactions }) => {
 		return data;
 	}, [transactions, search, period]);
 
-	return (
-		<Card className="mt-8">
-			<CardContent className="p-4">
-				<div className="flex flex-col md:flex-row md:items-center gap-4 mb-4">
-					<Input
-						placeholder="Rechercher une transaction, patient ou produit..."
-						value={search}
-						onChange={e => setSearch(e.target.value)}
-						className="md:w-64"
-					/>
-					<Select value={period} onValueChange={setPeriod}>
-						<SelectTrigger className="md:w-48">
-							<SelectValue placeholder="Filtrer par période" />
-						</SelectTrigger>
-						<SelectContent>
-							{periodOptions.map(opt => (
-								<SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-							))}
-						</SelectContent>
-					</Select>
-				</div>
-				<div className="overflow-x-auto">
-					<table className="min-w-full text-sm">
-						<colgroup>
-							<col style={{ width: '5%' }} />
-							<col style={{ width: '10%' }} />
-							<col style={{ width: '10%' }} />
-							<col style={{ width: '65%' }} />
-							<col style={{ width: '10%' }} />
-						</colgroup>
-						<thead>
-							<tr className="bg-gray-200">
-								<th className="px-3 py-2 text-left">ID</th>
-								<th className="px-3 py-2 text-left">Date</th>
-								<th className="px-3 py-2 text-left">Patient</th>
-								<th className="px-3 py-2 text-left">Produits</th>
-								<th className="px-3 py-2 text-left">Total</th>
-							</tr>
-						</thead>
-						<tbody>
-							{filtered.length === 0 ? (
-								<tr>
-									<td colSpan={5} className="text-center py-6 text-muted-foreground">Aucune transaction trouvée.</td>
-								</tr>
-							) : (
-								filtered.map((t, idx) => (
-									<tr key={t.id} className={`border-b last:border-0 align-top text-left ${idx % 2 === 1 ? 'bg-gray-50' : ''}`}>
-										<td className="px-3 py-2 font-mono whitespace-nowrap align-middle">{t.id}</td>
-										<td className="px-3 py-2 whitespace-nowrap align-middle">{new Date(t.date).toLocaleDateString()}</td>
-										<td className="px-3 py-2 whitespace-nowrap align-middle">{t.patientName || '-'}</td>
-                                        <td className="px-3 py-2">
-                                        {t.items && t.items.length > 0
-                                             ? t.items.map(i => i.name).join(' - '): '-'}
-                                        </td>
-										 
-										<td className="px-3 py-2 font-semibold whitespace-nowrap align-right">{t.total ? t.total.toFixed(2) + ' XOF' : '-'}</td>
-									</tr>
-								))
-							)}
-						</tbody>
-					</table>
-				</div>
-			</CardContent>
-		</Card>
-	);
+  // Helper pour formatage
+  const formatMoney = n => typeof n === 'number' ? n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : n;
+
+  const totalFiltered = filtered.reduce((sum, t) => sum + (t.total || 0), 0);
+
+  return (
+	<Card className="mt-8">
+	  <CardContent className="p-4">
+		<div className="flex flex-col md:flex-row md:items-center gap-4 mb-4">
+		  <Input
+			placeholder="Rechercher une transaction, patient ou produit..."
+			value={search}
+			onChange={e => setSearch(e.target.value)}
+			className="md:w-64"
+		  />
+		  <Select value={period} onValueChange={setPeriod}>
+			<SelectTrigger className="md:w-48">
+			  <SelectValue placeholder="Filtrer par période" />
+			</SelectTrigger>
+			<SelectContent>
+			  {periodOptions.map(opt => (
+				<SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+			  ))}
+			</SelectContent>
+		  </Select>
+		</div>
+		<div className="overflow-x-auto">
+		  <table className="min-w-full text-sm">
+			<colgroup>
+			  <col style={{ width: '5%' }} />
+			  <col style={{ width: '10%' }} />
+			  <col style={{ width: '10%' }} />
+			  <col style={{ width: '65%' }} />
+			  <col style={{ width: '10%' }} />
+			</colgroup>
+			<thead>
+			  <tr className="bg-gray-200">
+				<th className="px-3 py-2 text-left">ID</th>
+				<th className="px-3 py-2 text-left">Date</th>
+				<th className="px-3 py-2 text-left">Patient</th>
+				<th className="px-3 py-2 text-left">Produits</th>
+				<th className="px-3 py-2 text-left">Total</th>
+			  </tr>
+			</thead>
+			<tbody>
+			  {filtered.length === 0 ? (
+				<tr>
+				  <td colSpan={5} className="text-center py-6 text-muted-foreground">Aucune transaction trouvée.</td>
+				</tr>
+			  ) : (
+				filtered.map((t, idx) => (
+				  <tr key={t.id} className={`border-b last:border-0 align-top text-left ${idx % 2 === 1 ? 'bg-gray-50' : ''}`}>
+					<td className="px-3 py-2 font-mono whitespace-nowrap align-middle">{t.id}</td>
+					<td className="px-3 py-2 whitespace-nowrap align-middle">{new Date(t.date).toLocaleDateString()}</td>
+					<td className="px-3 py-2 whitespace-nowrap align-middle">{t.patientName || '-'}</td>
+					<td className="px-3 py-2">
+					  {t.items && t.items.length > 0
+						? t.items.map(i => i.name).join(' - ')
+						: '-'}
+					</td>
+					<td className="px-3 py-2 font-semibold whitespace-nowrap align-right">{t.total ? t.total.toFixed(2) + ' XOF' : '-'}</td>
+				  </tr>
+				))
+			  )}
+			</tbody>
+			<tfoot>
+			  <tr className="bg-gray-100 font-bold">
+				<td colSpan={4} className="px-3 py-2 text-right">Total</td>
+				<td className="px-3 py-2 font-bold text-green-700 whitespace-nowrap align-right">{formatMoney(totalFiltered)} XOF</td>
+			  </tr>
+			</tfoot>
+		  </table>
+		</div>
+	  </CardContent>
+	</Card>
+  );
 };
 
 export default TransactionsTable;

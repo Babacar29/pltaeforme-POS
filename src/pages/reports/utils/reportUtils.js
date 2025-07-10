@@ -19,10 +19,11 @@ const getSalesStats = (filteredSales, filteredPatients) => {
   filteredSales.forEach(sale => {
     sale.items.forEach(item => {
       // Exclure les catégories non pertinentes
-      if (item.category === 'Consultations' || item.category === 'Analyses') return;
-      if (!categoryStats[item.category]) categoryStats[item.category] = { revenue: 0, quantity: 0 };
-      categoryStats[item.category].revenue += item.price * item.quantity;
-      categoryStats[item.category].quantity += item.quantity;
+      const cat = (item.category || item.categorie || '').trim();
+      if (!cat || cat.toLowerCase() === 'consultations' || cat.toLowerCase() === 'analyses') return;
+      if (!categoryStats[cat]) categoryStats[cat] = { revenue: 0, quantity: 0 };
+      categoryStats[cat].revenue += (item.price || 0) * (item.quantity || 0);
+      categoryStats[cat].quantity += (item.quantity || 0);
     });
   });
 
