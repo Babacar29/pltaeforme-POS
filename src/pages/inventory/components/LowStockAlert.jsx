@@ -33,9 +33,11 @@ const LowStockAlert = ({ lowStockItems, onUpdateItem }) => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-3">
-            {lowStockItems.map(item => (
-              <div key={item.id} className="flex items-center justify-between p-2 bg-white rounded-lg">
+          <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-4">
+            {lowStockItems.filter((item, idx, arr) =>
+              arr.findIndex(i => i.id === item.id) === idx
+            ).map(item => (
+              <div key={item.id} className="flex items-center justify-between p-4 bg-white rounded-lg">
                 <div>
                   <p className="font-medium text-sm">{item.name}</p>
                   <p className="text-xs text-muted-foreground">Stock: {item.quantity}</p>
