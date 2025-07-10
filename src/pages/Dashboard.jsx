@@ -34,12 +34,25 @@ const Dashboard = () => {
       new Date(sale.date).toDateString() === today
     );
     const dailyTotal = todaySales.reduce((sum, sale) => sum + (sale.total || 0), 0);
+    // Montant vendu de produits de catégorie Ticket aujourd'hui
+    let ticketTotal = 0;
+    todaySales.forEach(sale => {
+      if (sale.items && Array.isArray(sale.items)) {
+        sale.items.forEach(item => {
+          console.log(`categories ============> ${item.price}`);
+          if ((item.category || item.categorie || '').toLowerCase() === 'ticket') {
+            ticketTotal += (item.price || 0) * (item.quantity || 1);
+          }
+        });
+      }
+    });
     const lowStockItems = inventory.filter(item => item.quantity <= (item.min_stock ?? item.minStock)).length;
     setStats({
       dailySales: dailyTotal,
       totalPatients: patients.length,
       todayAppointments: Math.floor(Math.random() * 15) + 5, // Simulation
-      lowStock: lowStockItems
+      lowStock: lowStockItems,
+      ticketTotal: ticketTotal
     });
     // Préparation des données pour le graphique
     const now = new Date();
@@ -61,14 +74,25 @@ const Dashboard = () => {
     setSalesChartData(chartData);
   }, [sales, patients, inventory, loading]);
 
+  // Helpers pour formatage
+  const formatMoney = n => typeof n === 'number' ? n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : n;
+
   const statCards = [
     {
       title: "Ventes du Jour",
-      value: `${stats.dailySales.toFixed(2)} XOF`,
+      value: `${formatMoney(stats.dailySales)} XOF`,
       description: "Total des ventes aujourd'hui",
       icon: DollarSign,
       color: "from-green-500 to-emerald-600",
       change: "+12.5%"
+    },
+    {
+      title: "Montant Ticket (Jour)",
+      value: `${formatMoney(stats.ticketTotal)} XOF`,
+      description: "Total vendu catégorie Ticket aujourd'hui",
+      icon: Package,
+      color: "from-orange-500 to-yellow-600",
+      change: ""
     },
     {
       title: "Patients Enregistrés",
@@ -77,14 +101,6 @@ const Dashboard = () => {
       icon: Users,
       color: "from-blue-500 to-cyan-600",
       change: "+3.2%"
-    },
-    {
-      title: "RDV Aujourd'hui",
-      value: stats.todayAppointments.toString(),
-      description: "Rendez-vous programmés",
-      icon: Calendar,
-      color: "from-purple-500 to-violet-600",
-      change: "+8.1%"
     },
     {
       title: "Stock Faible",
