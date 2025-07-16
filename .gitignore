@@ -23,3 +23,5 @@ dist
 .vscode-chat-code-block.lock.json.lock.jsonc.lock
 .vscode-chat-code-block.lock.json.lock.jsonc.lock.json
 .firebaserc
+.idea
+.firebase
