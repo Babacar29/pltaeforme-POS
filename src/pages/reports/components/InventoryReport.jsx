@@ -1,4 +1,5 @@
 import React from 'react';
+import ExportButtons from './ExportButtons';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Package, TrendingUp, DollarSign, BarChart3 } from 'lucide-react';
 import StatCard from './StatCard';
@@ -19,11 +20,27 @@ const InventoryReport = ({ data }) => {
     { title: "Catégories", value: Object.keys(categoryDistribution).length, icon: BarChart3, color: "text-purple-600" },
   ];
 
+  // Préparer les données pour l'export
+  const exportData = {
+    columns: [
+      { header: 'Catégorie', accessor: 'category' },
+      { header: 'Nombre d\'articles', accessor: 'count' },
+      { header: 'Valeur', accessor: 'value' }
+    ],
+    rows: Object.entries(categoryDistribution).map(([category, stats]) => ({
+      category,
+      count: stats.count,
+      value: stats.value
+    }))
+  };
+
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-4">
         {stats.map(stat => <StatCard key={stat.title} {...stat} />)}
       </div>
+
+      {/* <ExportButtons data={exportData} type="inventory" /> */}
 
       <Card className="glass-effect">
         <CardHeader>
