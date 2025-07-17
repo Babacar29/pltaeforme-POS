@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
+//import { Helmet } from 'react-helmet';
+import { HelmetProvider } from 'react-helmet-async';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/contexts/SupabaseAuthContext';
 import { DataProvider } from '@/contexts/DataContext';
@@ -17,12 +18,11 @@ import Login from '@/pages/Login';
 function App() {
   return (
     <>
-      <Helmet>
-        <title>POS Poste de Santé - Système de Point de Vente Médical</title>
-        <meta name="description" content="Système POS complet pour centre de santé avec gestion des patients, facturation, inventaire et rapports de ventes." />
-      </Helmet>
+      <title>POS Poste de Santé - Système de Point de Vente Médical</title>
+      <meta name="description" content="Système POS complet pour centre de santé avec gestion des patients, facturation, inventaire et rapports de ventes." />
       
-      <Router>
+      <HelmetProvider>
+        <Router>
         <AuthProvider>
           <Routes>
             <Route path="/login" element={<Login />} />
@@ -46,6 +46,8 @@ function App() {
           <Toaster />
         </AuthProvider>
       </Router>
+      </HelmetProvider>
+      
     </>
   );
 }
